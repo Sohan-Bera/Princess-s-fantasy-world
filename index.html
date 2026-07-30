@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -394,6 +395,20 @@
       line-height: 1.75;
       margin-bottom: 1rem;
     }
+    .app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  z-index: 5;
+  background: rgba(10, 12, 18, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid var(--royal-card)
+}
+
   </style>
 </head>
 <body>
@@ -480,11 +495,11 @@
       <div class="modal-body" id="card-2" style="display:none;">
         <h2>Chapter II • Lotus Catcher</h2>
         <p style="text-align: center; font-style: italic; margin-bottom: 0.6rem; font-size: 0.9rem; color: var(--gold-primary);">
-          Move cursor or slide your finger across the box to control the cup! ☕🪷
+          You have to collect the Lotuses in this game just move your finger across the box to control the cup! 🪷
         </p>
         <div class="game-container">
           <div class="game-header">
-            <span class="game-score" id="game-score-display">Lotuses: 0</span>
+            <span class="game-score" id="game-score-display">Lotuses collected: 0</span>
             <button class="game-reset-btn" onclick="resetGame()">Reset</button>
           </div>
           <div class="game-canvas-wrapper" id="game-wrapper">
@@ -795,5 +810,9 @@
       document.getElementById('shayari-el').innerHTML = shayaris[sIdx];
     }
   </script>
+  <!-- Add your Footer here -->
+  <footer class="app-footer">
+    <p>© 2026 Non-commercial. Privacy applied. Developed and edited by Sohan Bera. Made with 💖</p>
+  </footer>
 </body>
 </html>
