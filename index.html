@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Sanctuary in the Rain 🌹</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,500;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --glass-bg: rgba(18, 22, 33, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --text-main: #f5f3f0;
+      --text-sub: #d1c7bd;
+      --accent-rose: #e28595;
+      --accent-gold: #e5c158;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background: linear-gradient(180deg, rgba(8, 12, 20, 0.45) 0%, rgba(5, 7, 12, 0.75) 100%),
+                  url('fantasy.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-main);
+      font-family: 'Cormorant Garamond', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem 3rem 1rem;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Canvas for Falling Rain & Flowers */
+    #fx-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .main-wrapper {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .header-title {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-title h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-style: italic;
+      color: var(--text-main);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    }
+
+    .header-title p {
+      font-size: 1.05rem;
+      color: var(--text-sub);
+      margin-top: 0.3rem;
+    }
+
+    /* Grid of Clickable Navigation Cards */
+    .cards-menu {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .nav-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.4rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-card:active {
+      transform: scale(0.97);
+      background: rgba(226, 133, 149, 0.2);
+    }
+
+    .card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .card-meta span {
+      font-size: 0.8rem;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-meta h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      color: var(--text-main);
+    }
+
+    .card-arrow {
+      font-size: 1.4rem;
+      color: var(--accent-rose);
+    }
+
+    /* Modal / Topic View Window */
+    .topic-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: rgba(8, 12, 20, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .topic-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 2.2rem 1.6rem;
+      width: 100%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .topic-modal.active .modal-content {
+      transform: translateY(0) scale(1);
+    }
+
+    .close-btn {
+      background: transparent;
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 0.4rem 1.1rem;
+      border-radius: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      margin-bottom: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .modal-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-style: italic;
+      color: var(--text-main);
+      margin-bottom: 1rem;
+    }
+
+    .modal-body p {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--text-sub);
+    }
+
+    .dropcap::first-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      float: left;
+      line-height: 0.8;
+      margin-right: 0.5rem;
+      color: var(--accent-rose);
+    }
+
+    /* Grid for Vibe Items */
+    .vibe-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .vibe-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      padding: 0.8rem 0.5rem;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    /* Special List */
+    .special-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .special-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-left: 3px solid var(--accent-rose);
+      padding: 0.8rem 1rem;
+      border-radius: 0 10px 10px 0;
+      font-style: italic;
+    }
+
+    /* Shayari Styling */
+    .shayari-box {
+      text-align: center;
+      padding: 0.8rem 0;
+    }
+
+    .shayari-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      color: #ffffff;
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      background: rgba(18, 22, 33, 0.95);
+      color: var(--text-main);
+      padding: 0.6rem 1.6rem;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      border: 1px solid var(--accent-rose);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Continuous Music -->
+  <audio id="bg-music" src="song.mp3" loop preload="auto"></audio>
+
+  <canvas id="fx-canvas"></canvas>
+
+  <div class="main-wrapper">
+    <div class="header-title">
+      <h1>Rainy Sanctuary</h1>
+      <p>Select a card below to reveal its story</p>
+    </div>
+
+    <!-- Interactive Navigation Cards -->
+    <div class="cards-menu">
+      <div class="nav-card" onclick="openTopic('card-1')">
+        <div class="card-meta">
+          <span>Topic I</span>
+          <h3>Novelistic Chronicles</h3>
+        </div>
+        <span class="card-arrow">➔</span>
+      </div>
+
+      <div class="nav-card" onclick="openTopic('card-2')">
+        <div class="card-meta">
+          <span>Topic II</span>
+          <h3>Aesthetic Rain Vibes</h3>
+        </div>
+        <span class="card-arrow">➔</span>
+      </div>
+
+      <div class="nav-card" onclick="openTopic('card-3')">
+        <div class="card-meta">
+          <span>Topic III</span>
+          <h3>Why She Is Special</h3>
+        </div>
+        <span class="card-arrow">➔</span>
+      </div>
+
+      <div class="nav-card" onclick="onclick="openTopic('card-4')">
+        <div class="card-meta">
+          <span>Topic IV</span>
+          <h3>Shayaris & Monsoon Nights</h3>
+        </div>
+        <span class="card-arrow">➔</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Modal Overlay for Selected Card -->
+  <div class="topic-modal" id="topic-modal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeTopic()">← Back to Menu</button>
+      
+      <!-- Content Topic 1 -->
+      <div class="modal-body" id="card-1" style="display:none;">
+        <h2>Chapter I • The Castle Gates</h2>
+        <p class="dropcap">
+          The heavy rain washed over the ancient stone battlements, painting the valley in deep shadows of storm and fog. Inside these high gothic walls, time seemed to pause—leaving only the soft rhythm of rain, warm candle glow, and a quiet world created just for two.
+        </p>
+      </div>
+
+      <!-- Content Topic 2 -->
+      <div class="modal-body" id="card-2" style="display:none;">
+        <h2>Chapter II • Monsoon Vibes</h2>
+        <p style="text-align: center; font-style: italic;">Tap a mood to hear the whisper 🌧️</p>
+        <div class="vibe-grid">
+          <div class="vibe-pill" onclick="showToast('Thunder echoes softly in the distance... ⚡')">⚡ Thunder</div>
+          <div class="vibe-pill" onclick="showToast('Raindrops tapping window panes... 🪟')">🌧️ Window Patters</div>
+          <div class="vibe-pill" onclick="showToast('Hot tea brewing with cinnamon... ☕')">☕ Warm Chai</div>
+          <div class="vibe-pill" onclick="showToast('Soft piano melodies in a quiet room... 🎹')">🎹 Soft Piano</div>
+        </div>
+      </div>
+
+      <!-- Content Topic 3 -->
+      <div class="modal-body" id="card-3" style="display:none;">
+        <h2>Chapter III • Her Magic</h2>
+        <div class="special-list">
+          <div class="special-item">✨ Her laugh turns any stormy monsoon night warm and bright.</div>
+          <div class="special-item">🌹 The quiet grace in her presence, like a soft melody in a loud world.</div>
+          <div class="special-item">🌙 The way her eyes hold an entire universe of peace and kindness.</div>
+          <div class="special-item">☕ How simple moments become unforgettable memories around her.</div>
+        </div>
+      </div>
+
+      <!-- Content Topic 4 -->
+      <div class="modal-body" id="card-4" style="display:none;">
+        <h2>Chapter IV • Monsoon Whispers</h2>
+        <div class="shayari-box">
+          <p class="shayari-text" id="shayari-el">
+            "बारिश की इन ठंडी बूंदों में एक अजीब सा सुकूँ है,<br>
+            तुम्हारी यादों का ये मौसम, बेहद हसीं और जुनून है।"
+          </p>
+          <button class="close-btn" onclick="nextShayari()">Next Shayari ✍️</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* Automatic Continuous Background Music Trigger */
+    const bgMusic = document.getElementById('bg-music');
+    let hasPlayed = false;
+
+    function startMusic() {
+      if (!hasPlayed) {
+        bgMusic.play().then(() => {
+          hasPlayed = true;
+        }).catch(() => {
+          // Modern browsers require a user interaction first
+        });
+      }
+    }
+
+    // Try playing immediately, or on the first user click/touch anywhere on the page
+    window.addEventListener('click', startMusic, { once: true });
+    window.addEventListener('touchstart', startMusic, { once: true });
+
+    /* Rain & Falling Flowers Canvas Animation */
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const rainDrops = [];
+    const rainCount = window.innerWidth < 600 ? 45 : 85;
+
+    class RainDrop {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -50;
+        this.len = Math.random() * 20 + 10;
+        this.speed = Math.random() * 8 + 6;
+        this.opacity = Math.random() * 0.3 + 0.15;
+      }
+      update() {
+        this.y += this.speed;
+        if (this.y > canvas.height) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x, this.y + this.len);
+        ctx.strokeStyle = `rgba(180, 205, 235, ${this.opacity})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    const petals = [];
+    const petalCount = window.innerWidth < 600 ? 12 : 20;
+
+    class Petal {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -100;
+        this.size = Math.random() * 6 + 5;
+        this.speedY = Math.random() * 1.5 + 0.8;
+        this.speedX = Math.random() * 0.8 - 0.4;
+        this.rotation = Math.random() * 360;
+        this.rotSpeed = Math.random() * 2 - 1;
+        this.color = Math.random() > 0.4 ? 'rgba(226, 133, 149, 0.6)' : 'rgba(255, 215, 225, 0.7)';
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += Math.sin(this.y * 0.02) + this.speedX;
+        this.rotation += this.rotSpeed;
+        if (this.y > canvas.height) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < rainCount; i++) rainDrops.push(new RainDrop());
+    for (let i = 0; i < petalCount; i++) petals.push(new Petal());
+
+    function renderFX() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      rainDrops.forEach(drop => { drop.update(); drop.draw(); });
+      petals.forEach(petal => { petal.update(); petal.draw(); });
+      requestAnimationFrame(renderFX);
+    }
+    renderFX();
+
+    /* Navigation & Modal Toggle Logic */
+    function openTopic(cardId) {
+      startMusic(); // Ensure music plays when opening a card
+      document.querySelectorAll('.modal-body').forEach(b => b.style.display = 'none');
+      document.getElementById(cardId).style.display = 'block';
+      document.getElementById('topic-modal').classList.add('active');
+    }
+
+    function closeTopic() {
+      document.getElementById('topic-modal').classList.remove('active');
+    }
+
+    /* Shayari Rotator */
+    const shayaris = [
+      "बारिश की इन ठंडी बूंदों में एक अजीब सा सुकूँ है,<br>तुम्हारी यादों का ये मौसम, बेहद हसीं और जुनून है।",
+      "घटाएं छा रही हैं, फ़िज़ाओं में एक सुरूर है,<br>तुम्ारे बिना ये सुहानी शाम भी थोड़ी अधूरी ज़रूर है।",
+      "भीगी हुई रातों में, हाथ में चाय का कप हो,<br>और सामने तुम हो, फिर ज़माने की बात ही क्या हो।",
+      "चाँद भी छुप गया है इन भीगे बादलों के पीछे,<br>एक तुम्हारी मुस्कान ही काफ़ी है इस अंधेरी रात के लिए।"
+    ];
+    let sIdx = 0;
+    function nextShayari() {
+      sIdx = (sIdx + 1) % shayaris.length;
+      document.getElementById('shayari-el').innerHTML = shayaris[sIdx];
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+  </script>
+</body>
+</html>
