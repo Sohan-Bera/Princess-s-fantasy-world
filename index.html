@@ -381,48 +381,60 @@
       color: var(--text-main);
     }
 
+    /* Sequential Shayari Display Styles */
     .shayari-box {
       text-align: center;
       padding: 0.3rem 0;
     }
 
+    .shayari-item {
+      padding: 0.4rem 0;
+    }
+
     .shayari-text {
       font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-style: italic;
       color: var(--text-main);
-      line-height: 1.75;
-      margin-bottom: 1rem;
+      line-height: 1.7;
     }
-    .app-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 0.6rem 1rem;
-  text-align: center;
-  z-index: 5;
-  background: rgba(10, 12, 18, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
 
-.app-footer p {
-  /* Standard plain sans-serif system font */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  font-size: 0.75rem;
-  color: #888888; /* Simple neutral grey instead of gold */
-  font-style: normal;
-  letter-spacing: normal;
-  text-transform: none;
-}
+    .shayari-divider {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-border), transparent);
+      margin: 1.2rem auto;
+      width: 75%;
+    }
+
+    .app-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      z-index: 5;
+      background: rgba(10, 12, 18, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .app-footer p {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 0.75rem;
+      color: #888888;
+      font-style: normal;
+      letter-spacing: normal;
+      text-transform: none;
+    }
   </style>
 </head>
 <body>
 
   <!-- Background Music Audio Tag -->
-  <audio id="bg-music" src="mujko_barsat_bana_lo.mp3" loop preload="auto"></audio>
+  <audio id="bg-music" src="winters-tale-roger-gabalda-main-version-02-13-11041.mp3" loop preload="auto"></audio>
 
   <!-- Canvas FX for Rain and Floating Lotus Petals -->
   <canvas id="fx-canvas"></canvas>
@@ -518,29 +530,59 @@
 
       <!-- Topic 3 -->
       <div class="modal-body" id="card-3" style="display:none;">
-        <h2>Chapter III • Her Magic</h2>
-        <div class="special-list">
-          <div class="special-item">✨ Her laugh turns any stormy monsoon night warm and bright.</div>
-          <div class="special-item">🌹 The quiet grace in her presence, like a soft melody in a loud world.</div>
-          <div class="special-item">🌙 The way her eyes hold an entire universe of peace and kindness.</div>
-          <div class="special-item">☕ How simple moments become unforgettable memories around her.</div>
+        <h2></h2>
+          <div class="special-item"> I always be there for you even nobody arounds you.</div>
+          <div class="special-item"> Whatever happens just stay with me and never feel hopeless.</div>
+          <div class="special-item"> If you ask me about my intentions with you I will say nothing just stay together and create memories with love that we never experienced before.</div>
+          <div class="special-item"> Always smile & laugh because this is the best therapy to stay happy.</div>
+        
         </div>
       </div>
 
-      <!-- Topic 4 -->
+      <!-- Topic 4: Sequential Hinglish Shayaris -->
       <div class="modal-body" id="card-4" style="display:none;">
-        <h2>Chapter IV • Monsoon Whispers</h2>
+        <h2>For you</h2>
         <div class="shayari-box">
-          <p class="shayari-text" id="shayari-el">
-            "बारिश की इन ठंडी बूंदों में एक अजीब सा सुकूँ है,<br>
-            तुम्हारी यादों का ये मौसम, बेहद हसीं और जुनून है।"
-          </p>
-          <button class="close-btn" onclick="nextShayari()">Next Shayari ✍️</button>
+          <div class="shayari-item">
+            <p class="shayari-text">
+              "Duniy mai sabki paas ek
+                 Special shakhs hota hai....
+              Aur mere  liye wo shakhs "Tum ho"
+                 Jiska na koi Comparison hai
+              Aur nah koi replacement"
+            </p>
+          </div>
+
+        <hr class="shayari-divider">
+
+          <div class="shayari-item">
+            <p class="shayari-text">
+              "Tumhe chhue bina bhi <br>
+              tumhe mehsoos kiya hai,<br><br>
+                 Maine tumhare ehsaas se bhi<br>
+             Ishq kiys hai!"
+            </p>
+          </div>
+
+          <hr class="shayari-divider">
+
+          <div class="shayari-item">
+            <p class="shayari-text">
+              "Chaand chhup gaya hai in baadalon ke peeche,<br>
+              Par ek tumhari muskaan hi kaafi hai ak khoobsurat raato ke piche."
+            </p>
+          </div>
         </div>
       </div>
 
     </div>
   </div>
+
+  <footer class="app-footer">
+    <p>© 2026 Non-commercial. Privacy maintained. Developed and edited by Sohan Bera.</p>
+    <p>Music credits: "Winter's Tale" by Roger Gabalda via Uppbeat || Selected by Sohan.</p>
+    
+  </footer>
 
   <script>
     /* Continuous Audio Initializer */
@@ -804,23 +846,6 @@
 
       gAnimationId = requestAnimationFrame(gameLoop);
     }
-
-    /* Shayari Rotator */
-    const shayaris = [
-      "बारिश की इन ठंडी बूंदों में एक अजीब सा सुकूँ है,<br>तुम्हारी यादों का ये मौसम, बेहद हसीं और जुनून है।",
-      "घटाएं छा रही हैं, फ़िज़ाओं में एक सुरूर है,<br>तुम्ारे बिना ये सुहानी शाम भी थोड़ी अधूरी ज़रूर है।",
-      "भीगी हुई रातों में, हाथ में चाय का कप हो,<br>और सामने तुम हो, फिर ज़माने की बात ही क्या हो।",
-      "चाँद भी छुप गया है इन भीगे बादलों के पीछे,<br>एक तुम्हारी मुस्कान ही काफ़ी है इस अंधेरी रात के लिए।"
-    ];
-    let sIdx = 0;
-    function nextShayari() {
-      sIdx = (sIdx + 1) % shayaris.length;
-      document.getElementById('shayari-el').innerHTML = shayaris[sIdx];
-    }
   </script>
-  <!-- Add your Footer here -->
- <div></div> <footer class="app-footer">
-    <p>© 2026 Non-commercial. Privacy maintained. Developed and edited by Sohan Bera.</p>
-  </footer>
 </body>
 </html>
